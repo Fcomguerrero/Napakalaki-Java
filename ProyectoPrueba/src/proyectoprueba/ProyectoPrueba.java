@@ -7,7 +7,7 @@ package proyectoprueba;
 
 /**
  *
- * @author fcis  mofidicadooooo
+ * @author fcis  
  */
 public class ProyectoPrueba {
 
