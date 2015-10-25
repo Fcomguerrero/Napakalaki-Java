@@ -7,7 +7,7 @@ package proyectoprueba;
 
 /**
  *
- * @author fcis  +
+ * @author Fco Guerrero
  * 
  */
 public class ProyectoPrueba {
