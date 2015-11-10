@@ -14,6 +14,7 @@ public class Monster {
     private final int combatLevel;
     BadConsequence bc;
     Prize price;
+    private Prize prize;
  
     //constructor
 Monster(String name, int level, BadConsequence bc, Prize price){
@@ -36,6 +37,13 @@ return price;
 public int getCombatLevel(){
     return combatLevel;
 }
+public int getLevelsGained(){
+    return this.price.getLevel();
+}
+public int TreasuresGained(){
+    return this.price.getTreasures();
+}
+
 //devuelve un String con el estado del objeto
 public String toString(){
     return "\n\n" + name + "\nNivel = " + combatLevel + "\nBuen Rollo" + price.toString() + "\nMal Rollo" + bc.toString();
