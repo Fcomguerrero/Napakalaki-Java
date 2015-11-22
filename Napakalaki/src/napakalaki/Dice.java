@@ -20,9 +20,9 @@ public class Dice {
     }
     //Genera un numero aleatorio entre 1 y 6
     private Random number = new Random();
+    
     public int nextNumber(){
         int dice = number.nextInt(6)+1;
-        //System.out.println("\nNumero Obtenido " + Integer.toString(dice) + "\n");
     return dice;
     }
 

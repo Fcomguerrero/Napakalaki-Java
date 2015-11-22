@@ -147,8 +147,10 @@ public class CardDealer {
     Prize prize20 = new Prize(1,1);
     unusedMonsters.add(new Monster("Bicefalo",20,badConsequence20,prize20));
     //**************************************************************************    
-    }
-    //public Treasure(String name, int g, int bonus,  TreasureKind type )
+    
+    }//fin initMonsterCardDeck
+    
+    //public Treasure(String name, int bonus,  TreasureKind type )
     private void initTreasureCardDeck(){
         
 unusedTreasures.add(new Treasure("¡Si mi amo!", 4, TreasureKind.HELMET));
@@ -201,8 +203,34 @@ unusedTreasures.add(new Treasure("Zapato deja-amigos", 1, TreasureKind.SHOES));
     public void giveMonsterBack(Monster m){
         this.usedMonsters.add(m);  
     }
+    public Treasure nextTreasure(){
+        Treasure next;
+        if(unusedTreasures.isEmpty()){
+            unusedTreasures = usedTreasures;
+        Collections.shuffle(unusedTreasures);      
+        usedTreasures.clear();
+        }
+        next = unusedTreasures.get(0);
+        unusedTreasures.remove(next);
+        return next;
+    }
+    public Monster nextMonster(){
+        Monster next;
+        if(unusedMonsters.isEmpty()){
+            unusedMonsters = usedMonsters;
+        Collections.shuffle(unusedMonsters);
+        usedMonsters.clear();
+        }
+        next = unusedMonsters.get(0);
+        unusedMonsters.remove(next);
+        return next;
+    }
     
     
     
+    
+    
+    
+   
     
 }//clase 

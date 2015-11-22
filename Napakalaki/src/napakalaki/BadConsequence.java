@@ -81,7 +81,27 @@ public class BadConsequence {
         else
             return false;
     }
-    
+    //Actualiza el mal rollo para que el tesoro visible t no forme parte del mismo. Es posible que
+    //esta actualización no implique cambio alguno, que lleve a eliminar un tipo específico de
+    //tesoro visible, o a reducir el número de tesoros visibles pendientes.
+    public void substractVisibleTreasure(Treasure t){
+          if(!this.specificVisibleTreasures.isEmpty()){
+            for(TreasureKind k : specificVisibleTreasures){
+                if (k.equals(t.getType())) 
+                    this.specificVisibleTreasures.remove(t.getType());     
+            }       
+          }
+    }
+    //Igual que el anterior, pero para los ocultos.
+    public void substractHiddenTreasure(Treasure t){
+        if(!this.specificHiddenTreasures.isEmpty()){
+            for(TreasureKind k : specificHiddenTreasures){
+                if (k.equals(t.getType())) 
+                    this.specificHiddenTreasures.remove(t.getType());
+            }
+            
+        }
+    }                         
     //devuelve un String con el estado del objeto
     @Override
     public String toString(){
@@ -102,19 +122,4 @@ public class BadConsequence {
     
     return mensaje;
     }
-  
-        
-        
-        
-        
-        
-        
-}
-    
-    
-    
-    
-    
-    
-    
-   
+}//class                                                                                

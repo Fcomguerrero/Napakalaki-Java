@@ -28,8 +28,7 @@ public class PruebaNapakalaki {
      System.out.print("\n         Prueba del DADO                 ");
      System.out.print("\n       Resultado Obtenido " + Dice.getInstance().nextNumber());
      System.out.print("\n*****************************************");
-     
-     
+    
     } //main
     
 } //class
