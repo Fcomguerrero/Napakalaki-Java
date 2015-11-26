@@ -44,6 +44,12 @@ public class Player {
     public String getName() {
         return name;
     }
+    public ArrayList<Treasure> getHiddenTreasures() {
+        return hiddenTreasures;
+    }
+    public ArrayList<Treasure> getVisibleTreasures() {
+        return visibleTreasures;
+    }
     //Devuelve el nivel de combate del jugador, que viene dado por su nivel más los bonus
     //que le proporcionan los tesoros que tenga equipados, según las reglas del juego.
     private int getCombatLevel(){ 

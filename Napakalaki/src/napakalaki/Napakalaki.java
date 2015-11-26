@@ -124,13 +124,13 @@ public class Napakalaki {
     }
     
     CardDealer dealer = CardDealer.getInstance();
-    public void discardVisibleTreasure(Treasure[] treasures){ //diagrama 
+    public void discardVisibleTreasures(ArrayList<Treasure>treasures){ //diagrama 
         for(Treasure t: treasures){
             this.currentPlayer.discardVisibleTreasure(t); //1.2
         this.dealer.giveTreasureBack(t);                  //1.3
         }    
     }
-    public void discardHiddenTreasure(Treasure[] treasures){ //diagrama
+    public void discardHiddenTreasures(ArrayList<Treasure>treasures){ //diagrama
         for(Treasure t: treasures){                     
             this.currentPlayer.discardHiddenTreasure(t);    //1.2       
             this.dealer.giveTreasureBack(t);                //1.3
@@ -153,7 +153,6 @@ public class Napakalaki {
             this.currentPlayer.makeTreasureVisible(t);
         }                        
    }
-    
     
     
     
