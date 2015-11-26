@@ -7,7 +7,7 @@ package napakalaki;
 
 /**
  *
- * @author fcis
+ * @author Fco M Guerrero Jimènez
  */
 public enum CombatResult {
     WINGAME, WIN, LOSE

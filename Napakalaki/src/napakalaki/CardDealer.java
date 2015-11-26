@@ -11,7 +11,7 @@ import java.util.Collections;
 
 /**
  *
- * @author fcis
+ * @author Fco M Guerrero Jimènez
  */
 public class CardDealer {
     
@@ -29,6 +29,12 @@ public class CardDealer {
      private ArrayList<Treasure> unusedTreasures = new ArrayList();
      private ArrayList<Treasure> usedTreasures = new ArrayList();
     
+     
+     public void initCards(){
+        initMonsterCardDeck();
+        initTreasureCardDeck();
+     }
+          
     private void initMonsterCardDeck(){
     //************************************************************************
     BadConsequence badConsequence = new BadConsequence("Pierdes 5 niveles y 3"

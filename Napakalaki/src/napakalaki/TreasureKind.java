@@ -7,6 +7,6 @@ package napakalaki;
 
 /**
  *
- * @author fcis
+ * @author Fco M Guerrero Jimènez
  */
 public enum TreasureKind { ARMOR, ONEHAND, BOTHHANDS, HELMET, SHOES}

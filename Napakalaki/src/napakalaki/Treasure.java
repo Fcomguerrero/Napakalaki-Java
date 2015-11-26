@@ -6,7 +6,7 @@
 package napakalaki;
 /**
  *
- * @author fcis
+ * @author Fco M Guerrero Jimènez
  */
 public class Treasure{ 
        //Atributos de clase

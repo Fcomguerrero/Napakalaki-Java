@@ -8,7 +8,7 @@ package napakalaki;
 import java.util.ArrayList;
 /**
  *
- * @author fcis
+ * @author Fco M Guerrero Jimènez
  */
 public class BadConsequence {
     private String text;
@@ -101,7 +101,37 @@ public class BadConsequence {
             }
             
         }
-    }                         
+    }      
+    //Recibe como parámetros los tesoros visibles y ocultos de los que dispone el jugador y
+    //devuelve un nuevo objeto mal rollo que se ajusta a las posibilidades del jugador. Los
+    //atributos de BadConsequence que debemos tener en cuenta para ajustar el el mal rollo que
+    //debe cumplir el jugador son nVisibleTreasures, nHiddenTreasures, specificVisibleTreasures y
+    //specificHiddenTreasures.
+    public BadConsequence adjustToFitTreasureLists(ArrayList<Treasure> v, ArrayList<Treasure> h){
+        ArrayList<TreasureKind>visible = new ArrayList();
+        ArrayList<TreasureKind>hidden = new ArrayList();
+        
+        if(!v.isEmpty() && specificVisibleTreasures != null)
+            for (int i=0; i<specificVisibleTreasures.size(); i++) {
+                 for (int j=0; j< v.size(); j++) {
+                    if (specificVisibleTreasures.get(i) == v.get(i).getType()) {
+                         visible.add(v.get(j).getType());
+                        break;
+                    } 
+                }
+            }         
+        if(!h.isEmpty() && specificHiddenTreasures != null)
+            for (int i=0; i<specificHiddenTreasures.size(); i++) {
+                for (int j=0; j< h.size(); j++) {
+                    if (specificHiddenTreasures.get(i) == h.get(j).getType()) {
+                         hidden.add(h.get(j).getType());
+                            break;
+                    }
+                }
+            }         
+        BadConsequence bc = new BadConsequence("Ajuste.", 0, visible, hidden);         
+     return bc;            
+    }
     //devuelve un String con el estado del objeto
     @Override
     public String toString(){

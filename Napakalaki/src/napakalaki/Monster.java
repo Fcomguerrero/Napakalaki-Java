@@ -7,7 +7,7 @@ package napakalaki;
 
 /**
  *
- * @author fcis
+ * @author Fco M Guerrero Jimènez
  */
 public class Monster {
     private final String name;
@@ -40,7 +40,7 @@ public int getCombatLevel(){
 public int getLevelsGained(){
     return this.price.getLevel();
 }
-public int TreasuresGained(){
+public int getTreasuresGained(){
     return this.price.getTreasures();
 }
 

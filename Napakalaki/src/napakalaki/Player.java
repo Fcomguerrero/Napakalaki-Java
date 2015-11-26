@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 /**
  *
- * @author fcis
+ * @author Fco M Guerrero Jimènez
  */
 public class Player {
     //Atributos de clase 
@@ -119,35 +119,7 @@ public class Player {
     //Asigna valor al atributo que referencia al enemigo del jugador.
     public void setEnemy(Player enemy){
         this.enemy = enemy;
-    }
-    //Comprueba si el tesoro t se puede pasar de oculto a visible según las reglas del juego.
-   private boolean canMakeTreasureVisible(Treasure t){
-        boolean canMake = false;
-        TreasureKind type = t.getType();
-        switch (type) {
-            case ONEHAND: 
-                if ((howManyVisibleTreasures(type)>1)||(howManyVisibleTreasures(TreasureKind.BOTHHANDS)>0)){
-                    canMake = false;
-                }else{
-                    canMake = true;
-                    break;
-                }
-            case BOTHHANDS:
-                if ((howManyVisibleTreasures(type)>0)||(howManyVisibleTreasures(TreasureKind.ONEHAND)>0)){
-                    canMake = false;
-              
-                }else{
-                canMake = true;
-                } 
-            default: 
-                if (howManyVisibleTreasures(type)>0){
-                    canMake = false;
-                }else                
-                   canMake = true;               
-                }
-        //Devolvemos el resultado:
-        return canMake;
-    }
+    }    
    //Devuelve un tesoro elegido al azar de entre los tesoros ocultos del jugador. 
    private Treasure giveMeATreasure(){
        Treasure treasure;
@@ -180,6 +152,139 @@ public class Player {
        }
     this.dieIfNoTreasures();
     }
+    //Cuando el jugador decide robar un tesoro a su enemigo, este método comprueba que
+    //puede hacerlo (sólo se puede robar un tesoro durante la partida) y que su enemigo tiene
+    //tesoros ocultos para ser robados (canYouGiveMeATreasure()), en el caso que así sea éste le
+    //proporciona un tesoro que se almacenará con sus ocultos. El jugador no puede volver a
+    //robar otro tesoro durante la partida. En el caso que no se haya podido robar el tesoro por
+    //algún motivo se devuelve null.
+   public Treasure stealTreasure(){
+       boolean canl = canlSteal();
+       boolean canYou = false;
+       Treasure treasure = null;
+       if(canl){
+           this.enemy.canYouGiveMeATreasure();
+            if(canYou){
+                this.enemy.giveMeATreasure();
+                       this.hiddenTreasures.add(treasure);
+                       this.haveStolen();
+            }       
+       }
+       return treasure;
+   }
+   //Cuando el jugador ha perdido el combate, hay que considerar el mal rollo que le impone el
+    //monstruo con el que combatió. Para ello, decrementa sus niveles según indica el mal rollo y
+    //guarda una copia de un objeto badConsequence ajustada a los tesoros que puede perder.
+    //Es decir, un objeto mal rollo que refleje el mal rollo indicado por el monstruo pero
+    //eliminando las condiciones que el jugador no pueda cumplir según los tesoros de que
+    //disponga (por ejemplo si el mal rollo del monstruo implica perder 2 tesoros visibles y el
+    //jugador sólo tiene 1, entonces el mal rollo pendiente será de sólo 1 tesoro visible). La
+    //operación encargada de hacer esto es adjustToFitTreasureList de la clase badConsequence.
+    //Éste es el mal rollo pendiente (pendingbadConsequence) que el jugador almacenará y que
+    //deberá cumplir descartándose de esos tesoros antes de que pueda pasar al siguiente turno.
+   private void applyBadConsequence(Monster m){
+       int nLevels;
+       BadConsequence pendingBad;
+       BadConsequence badConsequence = m.getBc();
+       nLevels = badConsequence.getLevels();
+       this.decrementLevels(nLevels);
+       pendingBad = badConsequence.adjustToFitTreasureLists(visibleTreasures, hiddenTreasures);
+        this.setPendingBadConsequence(pendingBad);           
+   }
+    //Esta operación es la encargada de aplicar el buen rollo del monstruo vencido al jugador,
+    //sumando los niveles correspondientes y pidiendo al CardDealer que le dé el número de
+    //tesoros indicado en el buen rollo del monstruo. Esos tesoros se añaden a sus tesoros ocultos.
+   private void applyPrize(Monster m){
+       int nLevels = m.getLevelsGained();
+       this.incrementLevels(nLevels);
+       int nTreasures = m.getTreasuresGained();
+       if(nTreasures > 0){
+           CardDealer dealer = CardDealer.getInstance();
+           for(int i=1; i<=nTreasures; i++){
+              Treasure treasure = dealer.nextTreasure();
+               this.hiddenTreasures.add(treasure);
+           }                      
+       }
+   }
+   //Comprueba si el tesoro t se puede pasar de oculto a visible según las reglas del juego.
+   private boolean canMakeTreasureVisible(Treasure t){
+        boolean canMake = false;
+        TreasureKind type = t.getType();
+        switch (type) {
+            case ONEHAND: 
+                if ((howManyVisibleTreasures(type)>1)||(howManyVisibleTreasures(TreasureKind.BOTHHANDS)>0)){
+                    canMake = false;
+                }else{
+                    canMake = true;
+                    break;
+                }
+            case BOTHHANDS:
+                if ((howManyVisibleTreasures(type)>0)||(howManyVisibleTreasures(TreasureKind.ONEHAND)>0)){
+                    canMake = false;
+              
+                }else{
+                canMake = true;
+                } 
+            default: 
+                if (howManyVisibleTreasures(type)>0){
+                    canMake = false;
+                }else                
+                   canMake = true;               
+                }
+        //Devolvemos el resultado:
+        return canMake;
+    }
    
-    
+   public void makeTreasureVisible(Treasure t){
+       boolean canl = this.canMakeTreasureVisible(t);
+        if(canl){
+            this.visibleTreasures.add(t);
+            this.hiddenTreasures.remove(t);
+        }
+   }
+    //Cuando un jugador está en su primer turno o se ha quedado sin tesoros, hay que
+    //proporcionarle nuevos tesoros para que pueda seguir jugando. El número de tesoros que se
+    //les proporciona viene dado por el valor que saque al tirar el dado:
+   public void initTreasures(){
+       CardDealer dealer = CardDealer.getInstance();
+       Dice dice = Dice.getInstance();
+       this.bringToLife();
+       Treasure treasure = dealer.nextTreasure();
+       this.hiddenTreasures.add(treasure);
+       int number = dice.nextNumber();
+       if(number > 1){
+           treasure = dealer.nextTreasure();
+           this.hiddenTreasures.add(treasure);
+       }
+       else if(number == 6){
+           treasure = dealer.nextTreasure();
+           this.hiddenTreasures.add(treasure);
+       }               
+    }
+   //Operación responsabilidad de la única instancia de Napakalaki, la cual pasa el control al
+    //jugador actual (currentPlayer) para que lleve a cabo el combate con el monstruo que le ha
+    //tocado (currentMonster). El método de la clase Player con esa responsabilidad es
+    //combat(currentMonster:Monster): CombatResult, cuyo comportamiento general (también
+    //reflejado en el diagrama y responsabilidad de Player) es: si el nivel de combate del jugador
+    //supera al del monstruo, se aplica el buen rollo y se puede ganar el combate o el juego, en
+    //otro caso, el jugador pierde el combate y se aplica el mal rollo correspondiente.
+    public CombatResult combat(Monster m) {
+        CombatResult combatResult = null;
+        int myLevel = getCombatLevel();
+        int monsterLevel = m.getCombatLevel();
+        if(myLevel > m.getCombatLevel()){
+            applyPrize(m);
+            if(myLevel >= MAXLEVEL )
+                combatResult = CombatResult.WINGAME;
+                else
+                    combatResult = CombatResult.WIN;            
+        }else{
+            applyBadConsequence(m);
+            combatResult = CombatResult.LOSE;
+        }
+        return combatResult;
+    }
+   
+  
+   
 }//class
