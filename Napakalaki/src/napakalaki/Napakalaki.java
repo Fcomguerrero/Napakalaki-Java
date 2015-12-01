@@ -22,31 +22,31 @@ public class Napakalaki {
         return instance;
     }
     
-    private Monster currentMonster;
-    private Player currentPlayer;
-    private ArrayList<Player> players;
+    public Monster currentMonster = null;
+    public Player currentPlayer;
+    public ArrayList<Player> players = new ArrayList();
     
     //Se encarga de solicitar a CardDealer la inicialización de los mazos de cartas de Tesoros y
     //de Monstruos, de inicializar los jugadores proporcionándoles un nombre, asignarle a cada
     //jugador su enemigo y de iniciar el juego con la llamada a nextTurn() para pasar al siguiente
     //turno (que en este caso será el primero).
     public void initGame(ArrayList<String>names){
-        this.initPlayers(names);
-        this.setEnemies();        
-        dealer.initCards();
+        initPlayers(names); 
+        this.setEnemies();
+        dealer.initCards(); 
         this.nextTurn();
+                              
     }        
     //Inicializa el array de jugadores que contiene Napakalaki, creando tantos jugadores como
     //elementos haya en names, que es el array de String que contiene el nombre de los jugadores.
-     private void initPlayers(ArrayList<String>names){
-         ArrayList players = new ArrayList();
+     private void initPlayers(ArrayList<String>names){        
          for(String x:names)
              players.add(new Player(x));
      }
     private Player nextPlayer(){
         int nextindice;
         Player nextPlayer;
-        int numeroJugadores = this.players.size();
+        int numeroJugadores = 2;
         if(this.currentPlayer == null){
             Random rnd = new Random();
             nextindice = rnd.nextInt(numeroJugadores);
@@ -79,12 +79,14 @@ public class Napakalaki {
     //En caso de que el nuevo jugador activo esté muerto, por el combate en su anterior turno o
     //porque es el primer turno, se inicializan sus tesoros siguiendo las reglas del juego. La
     //inicialización de los tesoros se encuentra recogida en el diagrama subordinado initTreasures.
-    public boolean nextTurn(){
-        boolean stateOK = this.nextTurnIsAllowed();
+    public boolean nextTurn(){        
+        boolean stateOK = this.nextTurnAllowed();
         //boolean stateOK1 = this.currentPlayer.validState();
         if(stateOK){
+            dealer = CardDealer.getInstance();          
             this.currentMonster = dealer.nextMonster();
-            this.currentPlayer = nextPlayer();
+           System.out.println(" prueba ");
+            this.currentPlayer = this.nextPlayer();
             boolean dead = currentPlayer.isDead();
                 if(dead){
                     this.currentPlayer.initTreasures();
@@ -93,7 +95,7 @@ public class Napakalaki {
         return stateOK;
     }
     
-    private boolean nextTurnIsAllowed(){
+    private boolean nextTurnAllowed(){
         boolean Allowed;
         if (this.currentPlayer == null)
             Allowed = true;
@@ -109,20 +111,29 @@ public class Napakalaki {
                
     }
     //Se asigna un enemigo a cada jugador. Esta asignación se hace de forma aleatoria teniendo
-    //en cuenta que un jugador no puede ser enemigo de sí mismo.
-    private void setEnemies(){
-        int njugadores = players.size();        
-        int cont = 0;
-        while(cont < njugadores){
+    //en cuenta que un jugador no puede ser enemigo de sí mismo.        
+   /* private void setEnemies(){
+        int njugadores = players.size(); 
+        int indi;
+        indi = this.players.indexOf(this.players);
+         System.out.println(" 1 prueba");
+        for(int cont = 0; cont < njugadores; cont++){
              Random rnd = new Random();
              int ale = rnd.nextInt(njugadores);
-             if( cont != ale  ){
-                 this.players.get(cont).setEnemy(this.players.get(ale));
+             if( indi != ale  ){
+                 Player enemy;
+                 enemy = (this.players.get(ale));
                  cont++;
              }
         }
     }
-    
+*/    
+      private void setEnemies(){
+        for(int i = 0; i < players.size(); i++){
+            Player enemy = players.get((i+1)%players.size());
+            players.get(i).setEnemy(enemy);
+        }
+    }
     CardDealer dealer = CardDealer.getInstance();
     public void discardVisibleTreasures(ArrayList<Treasure>treasures){ //diagrama 
         for(Treasure t: treasures){

@@ -30,12 +30,11 @@ public Treasure(String name, int bonus,  TreasureKind type ){
     public TreasureKind getType() {
         return type;
     }
-
-   
-
-       
-       
-       
-       
+//toString
+    public String toString(){
+        return "Name: " + name + "\nBonus: " + bonus + "\nType: "+ type; 
+        
+    }
+                              
        
 }//clase

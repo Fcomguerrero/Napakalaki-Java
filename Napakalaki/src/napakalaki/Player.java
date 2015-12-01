@@ -18,7 +18,7 @@ public class Player {
    private boolean dead = true;
    private boolean canlSteal = true;
    private BadConsequence pendingBadConsequense;
-   private Player enemy;
+   Player enemy;
    
    //<<constant>>
    static final int MAXLEVEL = 10;
@@ -136,10 +136,13 @@ public class Player {
    //El jugador se descarta de todos sus tesoros ocultos y visibles. Para cada tesoro que se
    // descarta se hace uso de la operación discardVisibleTreasure(t:Treasure) o discardHiddenTreasure(t:Treasure)
    //según corresponda, de esa forma se verifica si se cumple con algún mal rollo pendiente.
+    
    public void discardAllTreasures(){               //Diagrama
-       for(Treasure t: visibleTreasures) //1.2
+    ArrayList<Treasure> vlista = new ArrayList<Treasure>(visibleTreasures);  //copia el ArrayList
+    ArrayList<Treasure> hlista = new ArrayList<Treasure>(hiddenTreasures);   //copia el ArrayList
+       for(Treasure t: vlista) //1.2
            this.discardVisibleTreasure(t);
-       for(Treasure t: hiddenTreasures)    //1.3
+       for(Treasure t: hlista)    //1.3
            this.discardHiddenTreasure(t);
    }
 
@@ -290,7 +293,13 @@ public class Player {
         }
         return combatResult;
     }
+//Metodo toString()
+    @Override
+    public String toString() {      
+        return getName();
+    }
    
+    
   
    
 }//class

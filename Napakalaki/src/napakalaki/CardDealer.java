@@ -24,13 +24,13 @@ public class CardDealer {
     }
     
     //ArrayList de Monstruos y Tesoros
-     private ArrayList<Monster> unusedMonsters = new ArrayList();
-     private ArrayList<Monster> usedMonsters = new ArrayList();
-     private ArrayList<Treasure> unusedTreasures = new ArrayList();
-     private ArrayList<Treasure> usedTreasures = new ArrayList();
+     ArrayList<Monster> unusedMonsters = new ArrayList();
+     ArrayList<Monster> usedMonsters = new ArrayList();
+     ArrayList<Treasure> unusedTreasures = new ArrayList();
+     ArrayList<Treasure> usedTreasures = new ArrayList();
     
      
-     public void initCards(){
+     public void initCards(){ 
         initMonsterCardDeck();
         initTreasureCardDeck();
      }
@@ -213,30 +213,24 @@ unusedTreasures.add(new Treasure("Zapato deja-amigos", 1, TreasureKind.SHOES));
         Treasure next;
         if(unusedTreasures.isEmpty()){
             unusedTreasures = usedTreasures;
-        Collections.shuffle(unusedTreasures);      
         usedTreasures.clear();
+            shuffleTreasures();      
+        
         }
         next = unusedTreasures.get(0);
         unusedTreasures.remove(next);
         return next;
     }
-    public Monster nextMonster(){
-        Monster next;
+    public Monster nextMonster(){        
         if(unusedMonsters.isEmpty()){
             unusedMonsters = usedMonsters;
-        Collections.shuffle(unusedMonsters);
-        usedMonsters.clear();
-        }
-        next = unusedMonsters.get(0);
-        unusedMonsters.remove(next);
+            usedMonsters.clear();
+        shuffleMonsters();      
+        }   
+        System.out.println(unusedMonsters.toString());
+       Monster next = unusedMonsters.get(0);
+       unusedMonsters.remove(0);
         return next;
     }
-    
-    
-    
-    
-    
-    
-   
-    
+              
 }//clase 

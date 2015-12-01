@@ -46,10 +46,7 @@ public int getTreasuresGained(){
 
 //devuelve un String con el estado del objeto
 public String toString(){
-    return "\n\n" + name + "\nNivel = " + combatLevel + "\nBuen Rollo" + price.toString() + "\nMal Rollo" + bc.toString();
-}
+    return "\n" + name + "\nNivel = " + combatLevel + "\nBuen Rollo" + price.toString() + "\nMal Rollo" + bc.toString();
+}            
     
-    
-    
-    
-}
+}//class
