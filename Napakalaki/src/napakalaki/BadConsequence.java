@@ -8,7 +8,7 @@ package napakalaki;
 import java.util.ArrayList;
 /**
  *
- * @author Fco M Guerrero Jimènez
+ * @author Fco Manuel Guerrero Jimènez
  */
 public class BadConsequence {
     private String text;
