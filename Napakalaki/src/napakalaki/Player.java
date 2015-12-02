@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 /**
  *
- * @author Fco M Guerrero Jimènez
+ * @author Fco Manuel Guerrero Jimènez
  */
 public class Player {
     //Atributos de clase 
@@ -281,7 +281,7 @@ public class Player {
         CombatResult combatResult = null;
         int myLevel = getCombatLevel();
         int monsterLevel = m.getCombatLevel();
-        if(myLevel > m.getCombatLevel()){
+        if(myLevel > monsterLevel){
             applyPrize(m);
             if(myLevel >= MAXLEVEL )
                 combatResult = CombatResult.WINGAME;

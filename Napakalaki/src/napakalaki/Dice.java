@@ -7,7 +7,7 @@ package napakalaki;
 import java.util.Random;
 /**
  *
- * @author Fco M Guerrero Jimènez
+ * @author Fco Manuel Guerrero Jimènez
  */
 public class Dice {
     

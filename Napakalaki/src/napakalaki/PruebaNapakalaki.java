@@ -7,7 +7,7 @@ package napakalaki;
 
 /**
  *
- * @author Fco M Guerrero Jimènez
+ * @author Fco Manuel Guerrero Jimènez
  * /
 
 public class PruebaNapakalaki {

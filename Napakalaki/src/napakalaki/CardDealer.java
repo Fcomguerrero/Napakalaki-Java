@@ -11,7 +11,7 @@ import java.util.Collections;
 
 /**
  *
- * @author Fco M Guerrero Jimènez
+ * @author Fco Manuel Guerrero Jimènez
  */
 public class CardDealer {
     
