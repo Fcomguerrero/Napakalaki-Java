@@ -34,14 +34,22 @@ public class Napakalaki {
         initPlayers(names); 
         this.setEnemies();
         dealer.initCards(); 
-        this.nextTurn();
-                              
+        this.nextTurn();                              
     }        
     //Inicializa el array de jugadores que contiene Napakalaki, creando tantos jugadores como
     //elementos haya en names, que es el array de String que contiene el nombre de los jugadores.
      private void initPlayers(ArrayList<String>names){        
          for(String x:names)
              players.add(new Player(x));
+     }
+    //Se asigna un enemigo a cada jugador. Esta asignación se hace de forma aleatoria teniendo
+    //en cuenta que un jugador no puede ser enemigo de sí mismo.         
+      private void setEnemies(){
+        int njugadores = players.size();
+          for (int i = 0; i < njugadores; i++) {                                
+            Player enemy = players.get((i+1)%players.size());                                
+                  players.get(i).setEnemy(enemy);                                                         
+          }
      }
     private Player nextPlayer(){
         int nextindice;
@@ -79,24 +87,24 @@ public class Napakalaki {
     //En caso de que el nuevo jugador activo esté muerto, por el combate en su anterior turno o
     //porque es el primer turno, se inicializan sus tesoros siguiendo las reglas del juego. La
     //inicialización de los tesoros se encuentra recogida en el diagrama subordinado initTreasures.
-    public boolean nextTurn(){        
-        boolean stateOK = this.nextTurnAllowed();
-        //boolean stateOK1 = this.currentPlayer.validState();
+    public boolean nextTurn(){
+        boolean stateOK = false;
+        boolean dead = true;
+        stateOK = this.nextTurnAllowed();        
         if(stateOK){
             dealer = CardDealer.getInstance();          
             this.currentMonster = dealer.nextMonster();
-           System.out.println(" prueba ");
             this.currentPlayer = this.nextPlayer();
-            boolean dead = currentPlayer.isDead();
+            dead = currentPlayer.isDead();
                 if(dead){
                     this.currentPlayer.initTreasures();
                 }
         } 
         return stateOK;
     }
-    
+    //nextTurnAllowed
     private boolean nextTurnAllowed(){
-        boolean Allowed;
+        boolean Allowed = false;
         if (this.currentPlayer == null)
             Allowed = true;
         else{
@@ -110,30 +118,7 @@ public class Napakalaki {
         return result == CombatResult.WINGAME;
                
     }
-    //Se asigna un enemigo a cada jugador. Esta asignación se hace de forma aleatoria teniendo
-    //en cuenta que un jugador no puede ser enemigo de sí mismo.        
-   /* private void setEnemies(){
-        int njugadores = players.size(); 
-        int indi;
-        indi = this.players.indexOf(this.players);
-         System.out.println(" 1 prueba");
-        for(int cont = 0; cont < njugadores; cont++){
-             Random rnd = new Random();
-             int ale = rnd.nextInt(njugadores);
-             if( indi != ale  ){
-                 Player enemy;
-                 enemy = (this.players.get(ale));
-                 cont++;
-             }
-        }
-    }
-*/    
-      private void setEnemies(){
-        for(int i = 0; i < players.size(); i++){
-            Player enemy = players.get((i+1)%players.size());
-            players.get(i).setEnemy(enemy);
-        }
-    }
+      
     CardDealer dealer = CardDealer.getInstance();
     public void discardVisibleTreasures(ArrayList<Treasure>treasures){ //diagrama 
         for(Treasure t: treasures){
@@ -147,15 +132,28 @@ public class Napakalaki {
             this.dealer.giveTreasureBack(t);                //1.3
         }
     }
-    
+    //Operación responsabilidad de la única instancia de Napakalaki, la cual pasa el control al
+    //jugador actual (currentPlayer) para que lleve a cabo el combate con el monstruo que le ha
+    //tocado (currentMonster). El método de la clase Player con esa responsabilidad es
+    //combat(currentMonster:Monster): CombatResult, cuyo comportamiento general (también
+    //reflejado en el diagrama y responsabilidad de Player) es: si el nivel de combate del jugador
+    //supera al del monstruo, se aplica el buen rollo y se puede ganar el combate o el juego, en
+    //otro caso, el jugador pierde el combate y se aplica el mal rollo correspondiente.
     public CombatResult developCombat(){
+        Cultist cultist = null;
         CombatResult combatResult = null;
-        combatResult = currentPlayer.combat(currentMonster);
+        int indexP;
+        combatResult = currentPlayer.combat(currentMonster);        
+        if(combatResult == CombatResult.LOSEANDCONVERT) {    
+            cultist = dealer.nextCultist(); 
+            CultistPlayer cultistPlayer = new CultistPlayer(currentPlayer,cultist);
+            indexP = this.players.indexOf(currentPlayer);
+            this.players.set(indexP, cultistPlayer);
+            currentPlayer = cultistPlayer;
+        }
         dealer.giveMonsterBack(currentMonster);
         return combatResult;
     }
-    
-    
     //Operación en la que se pide al jugador actual que pase tesoros ocultos a visibles, siempre
     //que pueda hacerlo según las reglas del juego, para ello desde Player se ejecuta el método:
     //canMakeTreasureVisible(treasures:Treasure ):boolean
@@ -165,11 +163,5 @@ public class Napakalaki {
         }                        
    }
     
-    
-    
-    
-    
-    
-    
-    
+       
 }//class

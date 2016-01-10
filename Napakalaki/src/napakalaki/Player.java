@@ -18,15 +18,15 @@ public class Player {
    private boolean dead = true;
    private boolean canlSteal = true;
    private BadConsequence pendingBadConsequense;
-   Player enemy;
+   protected Player enemy;
    
    //<<constant>>
    static final int MAXLEVEL = 10;
    
-    private ArrayList<Treasure> hiddenTreasures = new ArrayList();
-    private ArrayList<Treasure> visibleTreasures = new ArrayList();
+    protected ArrayList<Treasure> hiddenTreasures = new ArrayList();
+    protected ArrayList<Treasure> visibleTreasures = new ArrayList();
     
-    
+    //Constructor
     public Player(String name){
         this.name = name;
         this.dead = true;
@@ -35,7 +35,15 @@ public class Player {
         this.level = 1;
         this.pendingBadConsequense = null;
     }
-    
+    //Constructor de Copia (Crea un jugador a partir de otro)
+    public Player(Player p){
+        this.name = p.getName();
+        this.dead = p.isDead();
+        this.canlSteal = p.canlSteal();
+        this.enemy = p.enemy;
+        this.level = p.getLevel();
+        this.pendingBadConsequense = p.pendingBadConsequense;    
+    }
     //Devuelve true si el jugador está muerto, false en caso contrario.  
     public boolean isDead(){
         return dead;
@@ -50,9 +58,23 @@ public class Player {
     public ArrayList<Treasure> getVisibleTreasures() {
         return visibleTreasures;
     }
+    protected int getOponentLevel(Monster m){
+        return m.getCombatLevel();
+    }
+    //devolverá true si se obtiene un 1 y false en caso contrario. Su redefinición
+    //en CultistPlayer devolverá siempre false
+    protected boolean shouldConvert(){
+       boolean Convert = false;
+       Dice dice = Dice.getInstance();
+       int number = dice.nextNumber();
+        if(number == 1){
+            Convert = true;
+        }
+    return Convert;
+    }    
     //Devuelve el nivel de combate del jugador, que viene dado por su nivel más los bonus
     //que le proporcionan los tesoros que tenga equipados, según las reglas del juego.
-    private int getCombatLevel(){ 
+    protected int getCombatLevel(){ 
         int suma=0;
        for (Treasure visibleTreasure : visibleTreasures){
            suma = visibleTreasure.getBonus();
@@ -97,7 +119,7 @@ public class Player {
     }
     //Devuelve true si el jugador tiene tesoros para ser robados por otro jugador y false
     //en caso contrario
-    private boolean canYouGiveMeATreasure(){
+    protected boolean canYouGiveMeATreasure(){
        return !hiddenTreasures.isEmpty();
     }
     //Asigna el mal rollo al jugador, dándole valor a su atributo pendingBadConsequence
@@ -107,12 +129,12 @@ public class Player {
     //Devuelve true cuando el jugador no tiene ningún mal rollo que cumplir y no tiene
     //más de 4 tesoros ocultos, y false en caso contrario. Para comprobar que el jugador
     //no tenga mal rollo que cumplir, utiliza el método isEmpty de la clase BadConsequence.
-    public boolean validState(){
+     public boolean validState(){
         if(this.pendingBadConsequense.isEmpty() && this.hiddenTreasures.size()<=4)
             return true;
         else
             return false;
-    }
+    }  
     //Devuelve el número de tesoros visibles de tipo tKind que tiene el jugador.
     private int howManyVisibleTreasures(TreasureKind tKind){
             int i=0;
@@ -127,7 +149,7 @@ public class Player {
         this.enemy = enemy;
     }    
    //Devuelve un tesoro elegido al azar de entre los tesoros ocultos del jugador. 
-   private Treasure giveMeATreasure(){
+   protected Treasure giveMeATreasure(){
        Treasure treasure;
        Collections.shuffle(hiddenTreasures);
        treasure = hiddenTreasures.remove(0);
@@ -135,8 +157,7 @@ public class Player {
    }
    //El jugador se descarta de todos sus tesoros ocultos y visibles. Para cada tesoro que se
    // descarta se hace uso de la operación discardVisibleTreasure(t:Treasure) o discardHiddenTreasure(t:Treasure)
-   //según corresponda, de esa forma se verifica si se cumple con algún mal rollo pendiente.
-    
+   //según corresponda, de esa forma se verifica si se cumple con algún mal rollo pendiente.    
    public void discardAllTreasures(){               //Diagrama
     ArrayList<Treasure> vlista = new ArrayList<Treasure>(visibleTreasures);  //copia el ArrayList
     ArrayList<Treasure> hlista = new ArrayList<Treasure>(hiddenTreasures);   //copia el ArrayList
@@ -167,20 +188,21 @@ public class Player {
     //proporciona un tesoro que se almacenará con sus ocultos. El jugador no puede volver a
     //robar otro tesoro durante la partida. En el caso que no se haya podido robar el tesoro por
     //algún motivo se devuelve null.
-   public Treasure stealTreasure(){
-       boolean canl = canlSteal();
-       boolean canYou = false;
-       Treasure treasure = null;
+    public Treasure stealTreasure(){
+       //boolean canl = false;
+      boolean canl = canlSteal();
+       //boolean canYou = false;
+       Treasure treasure = null;        
        if(canl){
-           this.enemy.canYouGiveMeATreasure();
-            if(canYou){
-                this.enemy.giveMeATreasure();
-                       this.hiddenTreasures.add(treasure);
-                       this.haveStolen();
-            }       
+         boolean  canYou = this.enemy.canYouGiveMeATreasure();
+           if(canYou){
+                treasure = this.enemy.giveMeATreasure();
+                hiddenTreasures.add(treasure);
+                haveStolen();
+            }     
        }
        return treasure;
-   }
+    }
    //Cuando el jugador ha perdido el combate, hay que considerar el mal rollo que le impone el
     //monstruo con el que combatió. Para ello, decrementa sus niveles según indica el mal rollo y
     //guarda una copia de un objeto badConsequence ajustada a los tesoros que puede perder.
@@ -280,8 +302,7 @@ public class Player {
     public CombatResult combat(Monster m) {
         CombatResult combatResult = null;
         int myLevel = getCombatLevel();
-        int monsterLevel = m.getCombatLevel();
-        if(myLevel > monsterLevel){
+        if(myLevel > getOponentLevel(m)){
             applyPrize(m);
             if(myLevel >= MAXLEVEL )
                 combatResult = CombatResult.WINGAME;
@@ -290,9 +311,13 @@ public class Player {
         }else{
             applyBadConsequence(m);
             combatResult = CombatResult.LOSE;
+            if (shouldConvert())
+                combatResult = CombatResult.LOSEANDCONVERT;                            
         }
         return combatResult;
     }
+    
+    
 //Metodo toString()
     @Override
     public String toString() {      

@@ -6,6 +6,7 @@
 package napakalaki;
 
 import java.util.ArrayList;
+import java.util.Collections;
 /**
  *
  * @author Fco Manuel Guerrero Jimènez
@@ -33,6 +34,9 @@ public class BadConsequence {
     public BadConsequence(String text, boolean death){
         this.text = text;
         this.death = death;
+        this.levels = Player.MAXLEVEL;
+        this.nVisibleTreasures = MAXTREASURES;
+        this.nHiddenTreasures = MAXTREASURES;
     }
     //constructor
     BadConsequence(String text, int levels, ArrayList<TreasureKind> tVisible, ArrayList<TreasureKind> tHidden){
@@ -119,7 +123,7 @@ public class BadConsequence {
                         break;
                     } 
                 }
-            }         
+            }     
         if(!h.isEmpty() && specificHiddenTreasures != null)
             for (int i=0; i<specificHiddenTreasures.size(); i++) {
                 for (int j=0; j< h.size(); j++) {

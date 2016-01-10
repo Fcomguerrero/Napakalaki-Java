@@ -12,16 +12,18 @@ package napakalaki;
 public class Monster {
     private final String name;
     private final int combatLevel;
+    private int levelChangeAgainstCultistPlayer = 0;
     BadConsequence bc;
     Prize price;
     private Prize prize;
  
     //constructor
-Monster(String name, int level, BadConsequence bc, Prize price){
+Monster(String name, int level, BadConsequence bc, Prize price, int LC){
     this.name = name;
     this.combatLevel = level;
     this.bc = bc;
     this.price = price;
+    this.levelChangeAgainstCultistPlayer = LC;
 }
 
 //consultores   
@@ -34,6 +36,9 @@ public BadConsequence getBc() {
 public Prize getPrice() {
 return price;
 }
+public int getCombatLevelAgainstCultistPlayer() {
+    return getCombatLevel() + levelChangeAgainstCultistPlayer;
+}
 public int getCombatLevel(){
     return combatLevel;
 }
@@ -45,7 +50,8 @@ public int getTreasuresGained(){
 }
 
 //devuelve un String con el estado del objeto
-public String toString(){
+    @Override
+    public String toString(){
     return "\n" + name + "\nNivel = " + combatLevel + "\nBuen Rollo" + price.toString() + "\nMal Rollo" + bc.toString();
 }            
     
