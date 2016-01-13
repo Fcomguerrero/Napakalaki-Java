@@ -189,7 +189,7 @@ public class CardDealer {
     priz = new Prize(1,1);
     unusedMonsters.add(new Monster("Lolitagooth",2,NbadConse,priz,3));
     //**************************************************************************
-    
+    shuffleMonsters();
     }//fin initMonsterCardDeck
     
     //public Treasure(String name, int bonus,  TreasureKind type )
@@ -223,9 +223,10 @@ unusedTreasures.add(new Treasure("Mazo de los antiguos", 3, TreasureKind.ONEHAND
 unusedTreasures.add(new Treasure("Necroplayboycon", 3, TreasureKind.ONEHAND));
 unusedTreasures.add(new Treasure("Porra preternatural", 2, TreasureKind.ONEHAND));
 unusedTreasures.add(new Treasure("Shogulador", 1, TreasureKind.BOTHHANDS));
-//unusedTreasures.add(new Treasure("Varita de atizamiento", 3, TreasureKind.ONEHAND));
-//unusedTreasures.add(new Treasure("Tentaculo de pega", 2, TreasureKind.HELMET));
-//unusedTreasures.add(new Treasure("Zapato deja-amigos", 1, TreasureKind.SHOES));
+unusedTreasures.add(new Treasure("Varita de atizamiento", 3, TreasureKind.ONEHAND));
+unusedTreasures.add(new Treasure("Tentaculo de pega", 2, TreasureKind.HELMET));
+unusedTreasures.add(new Treasure("Zapato deja-amigos", 1, TreasureKind.SHOES));
+shuffleTreasures();
 
 }//initTreasureCardDeck
     
@@ -236,6 +237,7 @@ private void intiCultistCardDeck(){
     unusedCultists.add(new Cultist("Sectario",2));
     unusedCultists.add(new Cultist("Sectario",1));   
     unusedCultists.add(new Cultist("Sectario",1));
+    shuffleCultists();
 }    
     
     //Baraja el mazo de cartas de tesoros unusedTreasures.

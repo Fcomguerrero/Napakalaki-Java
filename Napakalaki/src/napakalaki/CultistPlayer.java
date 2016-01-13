@@ -5,9 +5,7 @@
  */
 package napakalaki;
 
-import java.util.Collections;
 import java.util.Random;
-import javafx.scene.control.TreeItem;
 
 /**
  *
@@ -22,7 +20,7 @@ public class CultistPlayer extends Player{
     public CultistPlayer(Player p, Cultist c ) {
         super(p);
         this.myCultistCard = c;
-        this.totalCultistPlayers++;         
+        CultistPlayer.totalCultistPlayers++;         
     }
     
     public static int getTotalCultistPlayers(){

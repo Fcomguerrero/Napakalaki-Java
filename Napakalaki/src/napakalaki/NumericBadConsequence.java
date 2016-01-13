@@ -53,13 +53,13 @@ public class NumericBadConsequence extends BadConsequence {
     //tesoro visible, o a reducir el número de tesoros visibles pendientes.
     @Override
     public void substractVisibleTreasure(Treasure t){
-          if(nVisibleTreasures>0)
+          if(nVisibleTreasures > 0)
               nVisibleTreasures--;
     }
     //Igual que el anterior, pero para los ocultos.
     @Override
     public void substractHiddenTreasure(Treasure t){
-        if(nHiddenTreasures >0)
+        if(nHiddenTreasures > 0)
             nHiddenTreasures--;
     }
     

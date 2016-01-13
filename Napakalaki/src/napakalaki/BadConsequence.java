@@ -6,7 +6,6 @@
 package napakalaki;
 
 import java.util.ArrayList;
-import java.util.Collections;
 /**
  *
  * @author Fco Manuel Guerrero Jimènez
@@ -15,7 +14,6 @@ public abstract class BadConsequence {
     private String text;
     private int levels;
     static final int MAXTREASURES = 10;
-    
           
        //constructor
     public BadConsequence(String text, int levels){
@@ -52,8 +50,7 @@ public abstract class BadConsequence {
     @Override
     public String toString(){
         
-        String mensaje = new String();
-        
+        String mensaje;
         mensaje = "\nText: "+ getText() + "\nNiveles Perdidos = " + getLevels();
     return mensaje;
     }
